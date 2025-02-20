@@ -63,8 +63,8 @@ EOF
 
   --restart)
     echo "Restarting the Docker container..."
-    docker stop $CONTAINER_NAME && \
-    docker start $CONTAINER_NAME
+    $0 --stop
+    $0 --start
     ;;
 
   --teams)
