@@ -89,6 +89,37 @@ def add_users_to_teams():
 
     return all_added
 
+def list_teams():
+    try:
+        response = requests.get(f"{grafana_url}/api/teams/search", headers={"Authorization": f"Bearer {service_token}"})
+        if response.status_code == 200:
+            teams = response.json().get("teams", [])
+            
+            # Определение ширины колонок
+            name_width = max(len(team['name']) for team in teams) + 2
+            id_width = max(len(str(team['id'])) for team in teams) + 2
+            
+            # Заголовок таблицы
+            print(f"+{'-' * name_width}+{'-' * id_width}+")
+            print(f"| {'Team Name'.ljust(name_width-1)}| {'ID'.ljust(id_width-1)}|")
+            print(f"+{'-' * name_width}+{'-' * id_width}+")
+            
+            # Данные таблицы
+            for team in teams:
+                print(f"| {team['name'].ljust(name_width-1)}| {str(team['id']).ljust(id_width-1)}|")
+            
+            # Нижняя граница таблицы
+            print(f"+{'-' * name_width}+{'-' * id_width}+")
+        else:
+            print("Failed to retrieve teams from Grafana.")
+    except Exception as e:
+        print(f"An error occurred while retrieving teams: {e}")
+
+# Обработка команд
+if len(sys.argv) > 1 and sys.argv[1] == '--teams':
+    list_teams()
+    sys.exit(0)
+
 # Основной цикл
 while True:
     if add_users_to_teams():
