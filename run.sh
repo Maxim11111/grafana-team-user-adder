@@ -14,6 +14,16 @@ function show_help {
     exit 0
 }
 
+function build_image {
+    echo "Building the Docker image with dependencies pre-installed..."
+    cat <<EOF | docker build -t grafana-user-adder -f- .
+FROM python:3.9-slim
+WORKDIR /app
+COPY add_users_to_team.py settings.json /app/
+RUN pip install requests
+EOF
+}
+
 case "$1" in
 
   --start)
@@ -33,13 +43,7 @@ case "$1" in
         exit 1
     fi
 
-    echo "Building the Docker image with dependencies pre-installed..."
-    docker build -t grafana-user-adder . <<EOF
-FROM python:3.9-slim
-WORKDIR /app
-COPY add_users_to_team.py settings.json /app/
-RUN pip install requests
-EOF
+    build_image
 
     echo "Running the Docker container..."
     docker run --rm -d \
