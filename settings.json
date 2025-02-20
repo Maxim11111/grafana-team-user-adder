@@ -1,0 +1,12 @@
+{
+  "teams": [
+    {
+      "grafana_team_id": 1,
+      "emails": []
+    }
+  ],
+  "grafana_url": "https://your_grafana_domain.com",
+  "admin_user": "admin",
+  "admin_password": "password",
+  "service_token": "your_service_token"
+}
